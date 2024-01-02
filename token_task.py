@@ -3,8 +3,8 @@ import os
 import pandas as pd
 import numpy as np
 
+# funtion to convert file from .xls to .xlsx
 def convert_to_xlsx(df):
-  
   df['Instant debit amount'] = df['Instant debit amount'].astype(str)
   df['Instant debit amount'].fillna('', inplace=True)
   df['Instant debit amount'].replace('nan', '', inplace=True)
@@ -13,6 +13,7 @@ def convert_to_xlsx(df):
   
   return df
 
+# function to build dataframe with new column format
 def initalize_tokenfile_format():
   tokenfile_format = {
       'External Pledge Reference Id' : [],
@@ -41,6 +42,7 @@ def initalize_tokenfile_format():
       }
   return pd.DataFrame(tokenfile_format)
 
+# function to copy data from old dataframe to new dataframe
 def copy_data(new_df, df):
   new_df['External Pledge Reference Id'] = df['Pledge ID']
   new_df['First_Name'] = df['First Name']
@@ -68,6 +70,7 @@ def copy_data(new_df, df):
 
   return new_df
 
+# function to reformat card type based on card number
 def change_card_type(new_df):
    conditions = [
       new_df['Card_Number'].str.startswith('4'),
@@ -81,11 +84,14 @@ def change_card_type(new_df):
    
    return new_df
 
+# main function
 def main():
+    # input folder path. Edit path accordingly
     folder_path = r'C:\Users\mfmohammad\OneDrive - UNICEF\Desktop\TM Schedule Files\Tokenization\December\29'
 
     files = os.listdir(folder_path)
 
+    # using for loop to detect file based on file name and process accordingly
     for file_name in files:
         if 'vsmc' in file_name.lower():
             print(file_name)
@@ -96,9 +102,11 @@ def main():
 
             df = convert_to_xlsx(df)
 
+            # rename the file
             new_file_name = file_name.split('.')[0] + '.xlsx'
             new_file_path = os.path.join(folder_path,new_file_name)
 
+            # save file
             df.to_excel(new_file_path, index=False)
 
         elif 'new card' in file_name.lower():
