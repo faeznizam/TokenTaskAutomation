@@ -87,15 +87,14 @@ def change_card_type(new_df):
 # main function
 def main():
     # input folder path. Edit path accordingly
-    folder_path = r'C:\Users\mfmohammad\OneDrive - UNICEF\Desktop\TM Schedule Files\Tokenization\December\29'
+    folder_path = r'C:\Users\mfmohammad\OneDrive - UNICEF\Desktop\TM Schedule Files\Tokenization\2024\Jan\3'
 
     files = os.listdir(folder_path)
 
     # using for loop to detect file based on file name and process accordingly
     for file_name in files:
         if 'vsmc' in file_name.lower():
-            print(file_name)
-
+            
             file_path = os.path.join(folder_path, file_name)
 
             df = pd.read_excel(file_path)
@@ -109,22 +108,24 @@ def main():
             # save file
             df.to_excel(new_file_path, index=False)
 
-        elif 'new card' in file_name.lower():
-            print(file_name)
+            print(f'{new_file_name} has been successfully created!')
 
+        elif 'new card' in file_name.lower():
+            
             file_path = os.path.join(folder_path, file_name)
 
-            df = pd.read_excel(file_path)
-            df['PAN 16/15 digits'] = df['PAN 16/15 digits'].astype(str)
-
+            df = pd.read_excel(file_path, dtype={'PAN 16/15 digits': str})
+            
             new_df = initalize_tokenfile_format()
             new_df = copy_data(new_df, df)
             new_df = change_card_type(new_df)
 
-            new_file_name = file_name.split('.')[0] + '- To Token.xlsx'
+            new_file_name = file_name.split('.')[0] + ' - To Token.xlsx'
             new_file_path = os.path.join(folder_path,new_file_name)
 
             new_df.to_excel(new_file_path, index=False)
+
+            print(f'{new_file_name} has been successfully created!')
 
         else:
             print('No File Available')
